@@ -1,0 +1,27 @@
+#!/bin/bash
+
+source config
+passwd_dir='/etc/passwd'
+passwd_list=()
+
+echo reset members.txt
+# check if file exists, delete it
+
+# make membersfile file
+touch members.txt
+
+echo copying member passwd from host
+# search from passwd
+for mem in ${MEMBERS[@]}; do
+    while read line; do
+        if [[ $line == *"$mem:"* ]]; then
+            uid=$(cut -d : -f 3 <<< $line)
+            echo $mem":x:"$uid":"$uid"::"$WORKDIR":/bin/bash" >> members.txt
+        fi
+    done < $passwd_dir
+done
+
+# build docker image
+docker build -t $IMAGE_NAME:$IMAGE_TAG .
+
+echo DONE

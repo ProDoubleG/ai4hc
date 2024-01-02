@@ -1,0 +1,22 @@
+#!/bin/bash
+
+source config
+
+if $REMOVE_ON_END;
+then
+    REMOVE_ON_END="--rm"
+else
+    REMOVE_ON_END=""
+fi
+
+docker run -it \
+    $REMOVE_ON_END \
+    --user $USER \
+    --gpus='"device=5"' \
+    -v $PROJECT_REPO_DIR:$WORKDIR \
+    -v $PROJECT_DATA_DIR1:$DATADIR1 \
+    -v $PROJECT_DATA_DIR2:$DATADIR2 \
+    -v $PROJECT_DATA_DIR3:$DATADIR3 \
+    --name hw_ai4ch_brain_tumour_junsuk-gpu5 \
+    $IMAGE_NAME:$IMAGE_TAG \
+    bash
